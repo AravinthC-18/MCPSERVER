@@ -23,4 +23,4 @@ def mul(a: int, b: int):
     return a * b
 
 
-mcp = mcp.streamable_http_app()
+app = mcp.streamable_http_app()
