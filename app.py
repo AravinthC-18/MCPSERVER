@@ -1,6 +1,17 @@
 from mcp.server.fastmcp import FastMCP
 
-mcp = FastMCP("Test Server", json_response=True)
+from mcp.server.transport_security import TransportSecuritySettings
+
+mcp = FastMCP(
+    "Test Server",
+    json_response=True,
+    host="0.0.0.0",
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=["mcpserver-fzg9.onrender.com", "mcpserver-fzg9.onrender.com:*"],
+        allowed_origins=["https://mcpserver-fzg9.onrender.com"],
+    ),
+)
 
 
 @mcp.tool()
@@ -23,4 +34,5 @@ def mul(a: int, b: int):
     return a * b
 
 
+transport_security = TransportSecuritySettings(enable_dns_rebinding_protection=False)
 app = mcp.streamable_http_app()
