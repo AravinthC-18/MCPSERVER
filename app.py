@@ -16,21 +16,25 @@ mcp = FastMCP(
 
 @mcp.tool()
 def add(a: int, b: int):
+    print("Calling add")
     return a + b
 
 
 @mcp.tool()
 def sub(a: int, b: int):
+    print("Calling sub")
     return a - b
 
 
 @mcp.tool()
 def divide(a: int, b: int):
+    print("Calling div")
     return a // b
 
 
 @mcp.tool()
 def mul(a: int, b: int):
+    print("Calling mul")
     return a * b
 
 
