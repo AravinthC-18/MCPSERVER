@@ -7,8 +7,6 @@ logging.basicConfig(stream=sys.stderr, level=logging.INFO, format="%(message)s")
 logger = logging.getLogger(__name__)
 
 from mcp.server.fastmcp import FastMCP
-import vertex_client
-import config
 
 mcp = FastMCP(
     "Test Server",
@@ -25,17 +23,15 @@ mcp = FastMCP(
 
 def _ocr(file_path: str) -> str:
     ocr_response = requests.post(
-        url=config.OCR_SERVICE_URL,
+        url="http://172.19.101.194:5000/ocr",
         json={"file_path": file_path},
-        timeout=config.OCR_TIMEOUT_SECONDS
+        timeout=600
     )
     if ocr_response.status_code != 200:
         raise Exception(f"OCR Service returned HTTP {ocr_response.status_code}: {ocr_response.text}")
     return ocr_response.json().get("text", "")
 
 
-def _classify(text: str) -> dict:
-    return vertex_client.classify_with_vertex(text)
 
 
 # ── Extraction tools (called by the client after routing) ────────────────────
@@ -107,13 +103,10 @@ def classify_document(file_path: str) -> dict:
     logger.info(f"[MCP] classify_document called for: {file_path}")
     try:
         text = _ocr(file_path)
-        classification = _classify(text)
         return {
             "status": "success",
             "file_path": file_path,
-            "document_type": classification.get("document_type", "Unknown"),
-            "confidence": classification.get("confidence", "Low"),
-            "tool": classification.get("tool", "extract_other"),
+            "text":text
         }
     except Exception as e:
         return {
