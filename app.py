@@ -18,45 +18,19 @@ mcp = FastMCP(
         allowed_origins=["https://mcpserver-fzg9.onrender.com"],
     ),
 )
-
-# ── Internal helpers ──────────────────────────────────────────────────────────
-
-def _ocr(file_path: str) -> str:
+@mcp.tool()
+def paddle_ocr(filename: str) -> str:
+    file_path=r"C:\Users\kathir.karthikeyan\Desktop\MCP_DEMO\sample.pdf"
+    url="http://172.19.101.194:5000/ocr"
     ocr_response = requests.post(
-        url="http://172.19.101.194:5000/ocr",
-        json={"file_path": file_path},
-        timeout=600
+        url=url,
+        json={"file_path": file_path},  
+        timeout=config.600
     )
-    print("ocr completed")
     if ocr_response.status_code != 200:
         raise Exception(f"OCR Service returned HTTP {ocr_response.status_code}: {ocr_response.text}")
     return ocr_response.json().get("text", "")
-
-
-
-
-# ── Extraction tools (called by the client after routing) ────────────────────
-
-@mcp.tool()
-def ocr_process(filename: str) -> dict:
-    
-    logger.info(f"[MCP] ocr process called for: {filename}")
-    try:
-        print("START OCR")
-        file_path= r"C:\Users\kathir.karthikeyan\Desktop\MCP_DEMO\sample.pdf"
-        text = _ocr(file_path)
-        # TODO: replace with a medical-specific Vertex prompt
-        return {
-            "status": "success",
-            "tool_used": "extract_medical",
-            "file_path": file_path,
-            "extracted_text": text.strip(),
-            "fields": {
-                "note": "Medical extraction fields go here"
-            }
-        }
-    except Exception as e:
-        return {"status": "error", "tool_used": "extract_medical", "error": str(e)}
+ 
 
 
 
