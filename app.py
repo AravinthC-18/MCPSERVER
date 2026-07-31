@@ -25,7 +25,7 @@ def paddle_ocr(filename: str) -> str:
     ocr_response = requests.post(
         url=url,
         json={"file_path": file_path},  
-        timeout=config.600
+        timeout=600
     )
     if ocr_response.status_code != 200:
         raise Exception(f"OCR Service returned HTTP {ocr_response.status_code}: {ocr_response.text}")
