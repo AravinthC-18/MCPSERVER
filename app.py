@@ -22,11 +22,13 @@ mcp = FastMCP(
 def paddle_ocr(filename: str) -> str:
     file_path=r"C:\Users\kathir.karthikeyan\Desktop\MCP_DEMO\sample.pdf"
     url="http://172.19.101.194:5000/ocr"
+    print("startted.......................")
     ocr_response = requests.post(
         url=url,
         json={"file_path": file_path},  
         timeout=600
     )
+    print("completed.......................")
     if ocr_response.status_code != 200:
         raise Exception(f"OCR Service returned HTTP {ocr_response.status_code}: {ocr_response.text}")
     return ocr_response.json().get("text", "")
