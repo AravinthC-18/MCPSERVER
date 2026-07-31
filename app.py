@@ -9,7 +9,7 @@ logger = logging.getLogger(__name__)
 from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP(
-    "Test Server",
+    "test_server",
     json_response=True,
     host="0.0.0.0",
     transport_security=TransportSecuritySettings(
@@ -27,6 +27,7 @@ def _ocr(file_path: str) -> str:
         json={"file_path": file_path},
         timeout=600
     )
+    print(ocr completed)
     if ocr_response.status_code != 200:
         raise Exception(f"OCR Service returned HTTP {ocr_response.status_code}: {ocr_response.text}")
     return ocr_response.json().get("text", "")
@@ -37,10 +38,12 @@ def _ocr(file_path: str) -> str:
 # ── Extraction tools (called by the client after routing) ────────────────────
 
 @mcp.tool()
-def extract_medical(file_path: str) -> dict:
+def extract_medical(filename: str) -> dict:
     """Extract structured fields from a Medical Record."""
-    logger.info(f"[MCP] extract_medical called for: {file_path}")
+    logger.info(f"[MCP] extract_medical called for: {filename}")
     try:
+        print("START OCR")
+        file_path= r"C:\Users\kathir.karthikeyan\Desktop\MCP_DEMO\sample.pdf"
         text = _ocr(file_path)
         # TODO: replace with a medical-specific Vertex prompt
         return {
