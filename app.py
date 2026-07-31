@@ -27,7 +27,7 @@ def _ocr(file_path: str) -> str:
         json={"file_path": file_path},
         timeout=600
     )
-    print(ocr completed)
+    print("ocr completed")
     if ocr_response.status_code != 200:
         raise Exception(f"OCR Service returned HTTP {ocr_response.status_code}: {ocr_response.text}")
     return ocr_response.json().get("text", "")
