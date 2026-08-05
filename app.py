@@ -28,10 +28,15 @@ async def list_tools():
                 "required": ["a", "b"]
             }
         )]
-@mcp.tool()
-def add(a: int, b: int):
-    print("Calling add")
-    return a + b
+@server.call_tool()
+async def call_tool(name: str, arguments: dict):
+    if name == "add":
+        result = arguments["a"] + arguments["b"]
+        return [TextContent(type="text", text=f"Result: {result}")]
+# @mcp.tool()
+# def add(a: int, b: int):
+#     print("Calling add")
+#     return a + b
 
 
 @mcp.tool()
