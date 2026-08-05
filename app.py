@@ -1,12 +1,6 @@
-import requests
-import json
-import logging
-import sys
-from mcp.server.transport_security import TransportSecuritySettings
-logging.basicConfig(stream=sys.stderr, level=logging.INFO, format="%(message)s")
-logger = logging.getLogger(__name__)
-
 from mcp.server.fastmcp import FastMCP
+
+from mcp.server.transport_security import TransportSecuritySettings
 
 mcp = FastMCP(
     "test_server",
@@ -18,22 +12,30 @@ mcp = FastMCP(
         allowed_origins=["https://mcpserver-fzg9.onrender.com"],
     ),
 )
-@mcp.tool()
-def paddle_ocr(filename: str) -> str:
-    file_path=r"C:\Users\kathir.karthikeyan\Desktop\MCP_DEMO\sample.pdf"
-    url="http://172.19.101.194:5000/ocr"
-    print("startted.......................")
-    ocr_response = requests.post(
-        url=url,
-        json={"file_path": file_path},  
-        timeout=600
-    )
-    print("completed.......................")
-    if ocr_response.status_code != 200:
-        raise Exception(f"OCR Service returned HTTP {ocr_response.status_code}: {ocr_response.text}")
-    return ocr_response.json().get("text", "")
- 
 
+
+@mcp.tool()
+def add(a: int, b: int):
+    print("Calling add")
+    return a + b
+
+
+@mcp.tool()
+def sub(a: int, b: int):
+    print("Calling sub")
+    return a - b
+
+
+@mcp.tool()
+def divide(a: int, b: int):
+    print("Calling div")
+    return a // b
+
+
+@mcp.tool()
+def mul(a: int, b: int):
+    print("Calling mul")
+    return a * b
 
 
 transport_security = TransportSecuritySettings(enable_dns_rebinding_protection=False)
