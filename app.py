@@ -13,7 +13,21 @@ mcp = FastMCP(
     ),
 )
 
-
+@server.list_tools()
+async def list_tools():
+    return [
+        Tool(
+            name="add",
+            description="Add two numbers together",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "a": {"type": "number", "description": "First number"},
+                    "b": {"type": "number", "description": "Second number"}
+                },
+                "required": ["a", "b"]
+            }
+        )]
 @mcp.tool()
 def add(a: int, b: int):
     print("Calling add")
