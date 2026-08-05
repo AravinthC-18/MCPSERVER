@@ -1,52 +1,42 @@
-# In your MCP server (CMRServer.py)
-from mcp.server import Server
-from mcp.types import Tool, TextContent
+from mcp.server.fastmcp import FastMCP
 
-server = Server("test_server")
+from mcp.server.transport_security import TransportSecuritySettings
 
-
-@server.list_tools()
-async def list_tools():
-    return [
-        Tool(
-            name="add",
-            description="Add two numbers together",
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "a": {"type": "number", "description": "First number"},
-                    "b": {"type": "number", "description": "Second number"}
-                },
-                "required": ["a", "b"]
-            }
-        ),
-        Tool(
-            name="ocr",
-            description="Extract text from PDF using OCR",
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "file_path": {"type": "string", "description": "Path to PDF file"}
-                },
-                "required": ["file_path"]
-            }
-        ),
-        Tool(
-            name="get_ocr_status",
-            description="Check OCR status and get results using job ID",
-            inputSchema={
-                "type": "object",
-                "properties": {
-                    "job_id": {"type": "string", "description": "Job ID from ocr tool"}
-                },
-                "required": ["job_id"]
-            }
-        )
-    ]
+mcp = FastMCP(
+    "test_server",
+    json_response=True,
+    host="0.0.0.0",
+    transport_security=TransportSecuritySettings(
+        enable_dns_rebinding_protection=True,
+        allowed_hosts=["mcpserver-fzg9.onrender.com", "mcpserver-fzg9.onrender.com:*"],
+        allowed_origins=["https://mcpserver-fzg9.onrender.com"],
+    ),
+)
 
 
-@server.call_tool()
-async def call_tool(name: str, arguments: dict):
-    if name == "add":
-        result = arguments["a"] + arguments["b"]
-        return [TextContent(type="text", text=f"Result: {result}")]
+@mcp.tool()
+def add(a: int, b: int):
+    print("Calling add")
+    return a + b
+
+
+@mcp.tool()
+def sub(a: int, b: int):
+    print("Calling sub")
+    return a - b
+
+
+@mcp.tool()
+def divide(a: int, b: int):
+    print("Calling div")
+    return a // b
+
+
+@mcp.tool()
+def mul(a: int, b: int):
+    print("Calling mul")
+    return a * b
+
+
+transport_security = TransportSecuritySettings(enable_dns_rebinding_protection=False)
+app = mcp.streamable_http_app()
