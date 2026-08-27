@@ -1,6 +1,7 @@
 from mcp.server.fastmcp import FastMCP
 from flask import Flask, request, redirect
 from mcp.server.transport_security import TransportSecuritySettings
+
 flask_app = Flask(__name__)
 mcp = FastMCP(
     "test_server",
@@ -15,16 +16,19 @@ mcp = FastMCP(
 
 
 @mcp.tool()
-@flask_app.route('/', methods=['GET', 'POST'])
-def add(a:int,b:int):
+@flask_app.route('/add', methods=['GET', 'POST'])
+def add(a: int, b: int):
     print("Calling add")
-    if request.method == 'POST':
-        data = request.json()
-        a = data["a"]
-        b = data["b"]
+    if a:
         return a + b
     else:
-        return a + b
+        if request.method == 'POST':
+            data = request.json()
+            a = data["a"]
+            b = data["b"]
+            return a + b
+        else:
+            return 0
 
 
 @mcp.tool()
@@ -43,7 +47,6 @@ def divide(a: int, b: int):
 def mul(a: int, b: int):
     print("Calling mul")
     return a * b
-
 
 
 transport_security = TransportSecuritySettings(enable_dns_rebinding_protection=False)
