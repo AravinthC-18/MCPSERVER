@@ -18,18 +18,20 @@ mcp = FastMCP(
 @mcp.tool()
 def add(a: int, b: int):
     print("Calling add")
-    return a+b
-    
+    return a + b
+
+
 @flask_app.route('/add', methods=['GET', 'POST'])
 def add_func():
     print("add func")
-     if request.method == 'POST':
+    if request.method == 'POST':
         data = request.json()
         a = data["a"]
         b = data["b"]
-        return add(a,b)
-     else:
-         return 0
+        return add(a, b)
+    else:
+        return 0
+
 
 @mcp.tool()
 def sub(a: int, b: int):
