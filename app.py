@@ -18,7 +18,7 @@ mcp = FastMCP(
 @mcp.tool()
 def add(int a:int b):
     print("Calling add")
-    add_func(a,b)
+    return add_func(a,b)
     
 @flask_app.route('/add', methods=['GET', 'POST'])
 def add_func(a: int, b: int):
