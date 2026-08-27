@@ -16,7 +16,7 @@ mcp = FastMCP(
 
 @mcp.tool()
 @flask_app.route('/', methods=['GET', 'POST'])
-def add():
+def add(a:int,b:int):
     print("Calling add")
     if request.method == 'POST':
         data = request.json()
@@ -24,7 +24,7 @@ def add():
         b = data["b"]
         return a + b
     else:
-        return 0
+        return a + b
 
 
 @mcp.tool()
