@@ -1,4 +1,5 @@
 from mcp.server.fastmcp import FastMCP
+
 from mcp.server.transport_security import TransportSecuritySettings
 
 mcp = FastMCP(
@@ -17,6 +18,7 @@ mcp = FastMCP(
 def add(a: int, b: int):
     print("Calling add")
     return a + b
+
 
 @mcp.tool()
 def sub(a: int, b: int):
@@ -37,7 +39,4 @@ def mul(a: int, b: int):
 
 
 transport_security = TransportSecuritySettings(enable_dns_rebinding_protection=False)
-mcp.streamable_http_app()
-
-if __name__ == '__main__':
-    mcp.run()
+app = mcp.streamable_http_app()
